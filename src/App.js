@@ -4,7 +4,7 @@ import MainApp from "./components/Global/MainApp";
 function App() {
   const [state, setstate] = useState({
     Fname: "",
-    Sname: "",
+    Username: "",
     Email: "",
     password: undefined,
   });
@@ -13,7 +13,6 @@ function App() {
   return (
     <div className='App'>
       <MainApp />
-      {/* <TodoApp /> */}
     </div>
   );
 }

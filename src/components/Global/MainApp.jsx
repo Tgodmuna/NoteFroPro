@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useCallback } from "react";
 import TodoApp from "../TodoApp/TodoApp";
 
 const MainApp = () => {
@@ -6,10 +6,14 @@ const MainApp = () => {
   const [IsTabActive, setIsTabActive] = useState(false);
 
   //tab handler, responsible for seting tab no.
-  const handleTab = (tab) => {
-    setIsTabActive(!false);
-    setTab(tab);
-  };
+  const handleTab = useCallback(
+    (tab) => {
+      setIsTabActive(!false);
+      setTab(tab);
+      console.log('started');
+    },
+    [],
+  );
   return (
     <div className='m-auto flex flex-col justify-center items-center'>
       {/* App selection Tab   */}
@@ -24,6 +28,7 @@ const MainApp = () => {
           }`}>
           Notes
         </button>
+
         <button
           type='button'
           onClick={() => handleTab(2)}

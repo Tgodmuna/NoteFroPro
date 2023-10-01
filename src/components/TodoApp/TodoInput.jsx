@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-const TodoInput = ({ HandleUpdateProp, Reset }) => {
+const TodoInput = ({ HandleUpdateProp }) => {
   const [TodoText, setTodoText] = useState("");
 
   //handle input function
@@ -8,7 +8,6 @@ const TodoInput = ({ HandleUpdateProp, Reset }) => {
     (e) => {
       const { value } = e.target;
       setTodoText(value);
-
       //call back from TodoApp
       HandleUpdateProp(value);
     },

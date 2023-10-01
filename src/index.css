@@ -22,5 +22,17 @@ code {
   .Tabs {
     @apply hover:bg-sky-400 py-5 rounded-2xl uppercase font-mono font-bold text-2xl w-[50%] border-black border-2 m-3 text-center;
   }
-  }
 
+  .float {
+    @apply capitalize  font-bold text-2xl text-slate-600 italic relative left-[12rem] top-[-4.5rem]  p-3 w-[10rem] peer-focus:opacity-90 peer-focus:shadow-2xl peer-focus:shadow-slate-50 peer-focus:bg-transparent peer-focus:translate-y-[-6.5rem] peer-focus:transition duration-[0.5s] ease-in
+  }
+  .inputs{
+    @apply p-[1.5rem] ring-1 hover:bg-slate-100 rounded-lg shadow-2xl w-[25rem] m-[auto] mt-[2rem] 
+  }
+  .holder{
+    @apply flex flex-col gap-2 my-[3rem] w-[50rem] m-auto bg-black rounded-md 
+  }
+  .btn{
+    @apply m-6 p-[1rem] text-center text-xl transition-all duration-1000 hover:cursor-pointer  uppercase font-bold rounded bg-black text-slate-200 w-[7rem]
+  }
+}

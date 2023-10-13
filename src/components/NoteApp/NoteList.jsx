@@ -7,7 +7,6 @@ const NoteList = ({ Store, EditNoteProp }) => {
   const [state, setstate] = useState(Store);
   const [Hovered, setHovered] = useState(null);
   const [showHover, SetshowHover] = useState(false);
-  const [EditNote, setEditNote] = useState("");
 
   const list = state.map((item, index) => {
     return (
@@ -33,8 +32,7 @@ const NoteList = ({ Store, EditNoteProp }) => {
             <VscEdit
               title='edit note'
               onClick={() => {
-                setEditNote(item.value);
-                EditNoteProp(EditNote);
+                EditNoteProp(item.value);
               }}
               size={30}
               className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'

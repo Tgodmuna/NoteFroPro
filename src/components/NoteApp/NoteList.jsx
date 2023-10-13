@@ -24,7 +24,7 @@ const NoteList = ({ Store, EditNoteProp }) => {
           key={index}>
           <span>
             <CiCircleRemove
-              title='remove note'
+              title='delete note'
               size={30}
               className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
               onClick={() => localStorage.removeItem(item.key)}

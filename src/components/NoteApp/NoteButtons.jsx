@@ -57,53 +57,6 @@ const BGbtn = ({ closeColorBTNs, ChangeBG }) => {
   );
 };
 
-const FontStyle = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>Font</button>
-    </div>
-  );
-};
-
-const Emoji = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>Emoji</button>
-    </div>
-  );
-};
-
-const Share = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>Share</button>
-    </div>
-  );
-};
-
-const CreateFile = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>CreateFile</button>
-    </div>
-  );
-};
-
-const SaveAs = (width) => {
-  return (
-    <div className={`w-[${width}]`}>
-      <button className='btn'>save</button>
-    </div>
-  );
-};
-
-const Preview = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>Preview</button>
-    </div>
-  );
-};
 
 const Menu = ({ closeMenu }) => {
   return (
@@ -130,13 +83,7 @@ const Menu = ({ closeMenu }) => {
 
 export {
   Menu,
-  SaveAs,
-  CreateFile,
-  Share,
-  Emoji,
-  FontStyle,
   BGbtn,
   Edit,
   Save,
-  Preview,
 };

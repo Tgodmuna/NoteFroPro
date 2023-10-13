@@ -21,7 +21,6 @@ const NoteEditor = () => {
   const [showColorBTNs, setshowColorBTNs] = useState(false);
   const [Text, setText] = useState("");
   const [SaveIndicator, setSaveIndicator] = useState(!false);
-  // const [ID, setID] = useState(0);
   const [LocalStorageArray, setLocalStorageArray] = useState([]);
 
   // save handler
@@ -35,7 +34,7 @@ const NoteEditor = () => {
     }
   }, [Text]);
 
-  //background color
+  //change background color
   const ChangeBG = useEffect((colorName) => {
     let elem = document.querySelector("textarea");
     elem.style.backgroundColor = colorName;
@@ -73,7 +72,7 @@ const NoteEditor = () => {
 
   useEffect(() => {
     getAllNote();
-  }, [getAllNote, LocalStorageArray]);
+  }, [getAllNote]);
 
   return (
     <Suspense fallback={<>loading...</>}>

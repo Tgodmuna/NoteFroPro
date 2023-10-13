@@ -7,8 +7,11 @@ const NoteList = ({ Store, EditNoteProp }) => {
   const [state, setstate] = useState(Store);
   const [Hovered, setHovered] = useState(null);
   const [showHover, SetshowHover] = useState(false);
-
+  useEffect(() => {
+    setstate(Store);
+  }, [Store]);
   const list = state.map((item, index) => {
+  
     return (
       <>
         <li
@@ -27,7 +30,12 @@ const NoteList = ({ Store, EditNoteProp }) => {
               title='delete note'
               size={30}
               className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
-              onClick={() => localStorage.removeItem(item.key)}
+              onClick={() => {
+                localStorage.removeItem(item.key);
+                setstate((prev) =>
+                  prev.filter((note) => note.key !== item.key),
+                );
+              }}
             />
             <VscEdit
               title='edit note'
@@ -46,8 +54,6 @@ const NoteList = ({ Store, EditNoteProp }) => {
     );
   });
 
-  useEffect(() => setstate(Store), [Store]);
-
   return (
     <Suspense fallback={<>loading....................</>}>
       <div className='w-[25rem] border-[4px] border-cyan-700 rounded-lg h-[40vw] my-4  overflow-y-scroll '>
@@ -60,4 +66,4 @@ const NoteList = ({ Store, EditNoteProp }) => {
   );
 };
 
-export default React.memo(NoteList);
+export default NoteList;

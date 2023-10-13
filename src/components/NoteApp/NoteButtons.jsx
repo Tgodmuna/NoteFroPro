@@ -1,21 +1,5 @@
 import React from "react";
 
-const Save = () => {
-  return (
-    <>
-      <button className='btn'>save</button>
-    </>
-  );
-};
-
-const Edit = () => {
-  return (
-    <div className='w-[5rem]'>
-      <button className='btn'>edit</button>
-    </div>
-  );
-};
-
 const BGbtn = ({ closeColorBTNs, ChangeBG }) => {
   const colorNames = [
     "red",
@@ -84,6 +68,4 @@ const Menu = ({ closeMenu }) => {
 export {
   Menu,
   BGbtn,
-  Edit,
-  Save,
 };

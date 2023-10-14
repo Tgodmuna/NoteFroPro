@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useCallback, useEffect, useState } from "react";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { HiSave, HiSaveAs } from "react-icons/hi";
 import { VscOpenPreview } from "react-icons/vsc";
 import { BsShareFill } from "react-icons/bs";
@@ -9,9 +9,7 @@ import { BiFontFamily } from "react-icons/bi";
 import { AiOutlineHome } from "react-icons/ai";
 import NoteList from "./NoteList";
 //lazy imports
-const LazyMore = lazy(() =>
-  import("./NoteButtons").then((module) => ({ default: module.Menu })),
-);
+
 const LazyBG = lazy(() =>
   import("./NoteButtons").then((Module) => ({ default: Module.BGbtn })),
 );
@@ -35,15 +33,11 @@ const NoteEditor = () => {
   }, [Text]);
 
   //change background color
-  const ChangeBG = useEffect((colorName) => {
+  const ChangeBG = (colorName) => {
     let elem = document.querySelector("textarea");
     elem.style.backgroundColor = colorName;
-  }, []);
-
-  //close menu handler
-  const closeMenu = () => {
-    setShowMenu(false);
   };
+
   const closeColorBTNs = () => {
     setshowColorBTNs(false);
   };
@@ -75,32 +69,37 @@ const NoteEditor = () => {
   }, [getAllNote]);
 
   return (
-    <Suspense fallback={<>loading...</>}>
+    <Suspense fallback={<> loading ...</>}>
       {" "}
-      <div className='  flex  gap-5 mt-5 justify-start -mx-3 w-full '>
+      <div className=' flex  mt-5 justify-start  w-full '>
         {/* icons */}
-        <div className='Titlebar p-[1rem] w-[5rem] h-[40vw] border-slate-400 border-2 rounded items-center my-4 m-[19px]  flex flex-col gap-6 justify-between '>
+
+        <FaBars
+          size={35}
+          onClick={() => setShowMenu(true)}
+          className={`IconHover hover:cursor-pointer title='more'
+ ${
+   ShowMenu ? "hidden transition-all  duration-1000 ease-in " : ""
+ } absolute  left-4`}
+        />
+
+        <div
+          className={`Titlebar p-[1rem] w-[5rem] h-[40vw] border-slate-400 border-2 rounded items-center my-4  flex flex-col  justify-between relative left-[-12.5rem] ${
+            ShowMenu
+              ? "translate-x-[12.5rem] transition-transform duration-700 "
+              : "translate-x-[-12.5rem] ease-in  transition-transform duration-700"
+          } `}>
           <div className='flex '>
-            <FaBars
-              onClick={() => setShowMenu(true)}
-              title='more'
+            <FaTimes
+              onClick={() => setShowMenu(false)}
               size={30}
-              className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
+              className={`IconHover hover:cursor-pointer `}
             />
-            {ShowMenu && <LazyMore closeMenu={closeMenu} />}
           </div>
 
           {/* icons */}
-          <AiOutlineHome
-            title='Home'
-            size={30}
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-          />
-          <HiSaveAs
-            size={30}
-            title='save as'
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-          />
+          <AiOutlineHome title='Home' size={30} className='IconHover' />
+          <HiSaveAs size={30} title='save as' className='IconHover' />
           <HiSave
             onClick={() => {
               Save();
@@ -108,46 +107,34 @@ const NoteEditor = () => {
             }}
             title='save'
             size={30}
-            className={` hover:cursor-pointer hover:scale-x-90 hover:text-green-500`}
+            className={` IconHover`}
           />
           <span
-            className={`bg-red-500 p-[6px] absolute border-2 border-green-400  top-[21rem] left-[60px] rounded-full w-1 h-1  ${
+            className={`bg-red-500 p-[4px] absolute border-2 border-green-400  top-[18rem] left-[40px] rounded-full w-1 h-1  ${
               SaveIndicator ? "block" : "hidden"
             } `}></span>
 
-          <VscOpenPreview
-            title='preview '
-            size={30}
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-          />
-          <BsShareFill
-            title='share'
-            size={30}
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-          />
+          <VscOpenPreview title='preview ' size={30} className='IconHover' />
+          <BsShareFill title='share' size={30} className='IconHover' />
           <IoCreateOutline
             onClick={createNewNote}
             title='newfile'
             size={30}
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
+            className='IconHover'
           />
           <div className='flex'>
             <TbStatusChange
               onClick={() => setshowColorBTNs(true)}
               title='background color '
               size={30}
-              className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-            />
+              className='IconHover'
+            />{" "}
             {showColorBTNs ? (
               <LazyBG closeColorBTNs={closeColorBTNs} ChangeBG={ChangeBG} />
             ) : null}
           </div>
 
-          <BiFontFamily
-            title='font style'
-            size={30}
-            className='hover:cursor-pointer hover:scale-x-90 hover:text-green-500'
-          />
+          <BiFontFamily title='font style' size={30} className='IconHover' />
         </div>
 
         <textarea
@@ -161,7 +148,7 @@ const NoteEditor = () => {
             setText(e.target.value);
             setSaveIndicator(true);
           }}
-          className='Editor w-full h-[40vw] bg-gray-300 border-2 border-black rounded-lg text-left indent-3 capitalize  my-4 p-4'>
+          className='Editor w-full h-[40vw] m-3 bg-gray-300 border-2 border-black rounded-lg text-left indent-3 capitalize  my-4 p-4'>
           start typing
         </textarea>
 

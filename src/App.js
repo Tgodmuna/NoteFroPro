@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import MainApp from "./components/Global/MainApp";
-import NoteEditor from "./components/NoteApp/NoteEditor";
+import DashBoard from "./components/Global/DashBoard";
 
 function App() {
   const [state, setstate] = useState({
@@ -14,8 +13,7 @@ function App() {
 
   return (
     <div className='App'>
-      {/* <MainApp /> */}
-      <NoteEditor />
+      <DashBoard />
     </div>
   );
 }

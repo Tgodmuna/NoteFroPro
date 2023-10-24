@@ -1,21 +1,19 @@
 import React, { useState, memo, useCallback } from "react";
 import TodoApp from "../TodoApp/TodoApp";
+import NoteEditor from "../NoteApp/NoteEditor";
 
 const MainApp = () => {
   const [Tab, setTab] = useState(1);
   const [IsTabActive, setIsTabActive] = useState(false);
 
   //tab handler, responsible for seting tab no.
-  const handleTab = useCallback(
-    (tab) => {
-      setIsTabActive(!false);
-      setTab(tab);
-      console.log('started');
-    },
-    [],
-  );
+  const handleTab = useCallback((tab) => {
+    setIsTabActive(!false);
+    setTab(tab);
+    console.log("started");
+  }, []);
   return (
-    <div className='m-auto flex flex-col justify-center items-center'>
+    <div className='m-auto flex flex-col h-full justify-center items-center bg-slate-500 '>
       {/* App selection Tab   */}
       <div className='flex justify-between w-[50rem] border-4 p-2 rounded-2xl m-auto  '>
         <button
@@ -40,7 +38,10 @@ const MainApp = () => {
           Todos
         </button>
       </div>
-      <>{IsTabActive && Tab === 2 ? <TodoApp /> : null}</>
+      <>
+        {IsTabActive && Tab === 1 && <NoteEditor />}
+        {IsTabActive && Tab === 2 && <TodoApp />}
+      </>
     </div>
   );
 };

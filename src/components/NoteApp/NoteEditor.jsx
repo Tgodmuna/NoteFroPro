@@ -14,12 +14,12 @@ const LazyBG = lazy(() =>
   import("./NoteButtons").then((Module) => ({ default: Module.BGbtn })),
 );
 
-const NoteEditor = () => {
+const NoteEditor = ({ ReturnStore }) => {
   const [ShowMenu, setShowMenu] = useState(false);
   const [showColorBTNs, setshowColorBTNs] = useState(false);
   const [Text, setText] = useState("");
   const [SaveIndicator, setSaveIndicator] = useState(!false);
-  const [LocalStorageArray, setLocalStorageArray] = useState([]);
+  const [NoteStore, setNoteStore] = useState([]);
 
   // save handler
   const Save = useCallback(() => {
@@ -41,6 +41,7 @@ const NoteEditor = () => {
   const closeColorBTNs = () => {
     setshowColorBTNs(false);
   };
+
   // new note
   const createNewNote = () => {
     setText("");
@@ -52,26 +53,27 @@ const NoteEditor = () => {
     setText(editText);
   };
 
-  //get all the items in the localstorage
+  //get all the Notes in the localstorage
   const getAllNote = useCallback(() => {
     let i;
     let arr = [];
     for (i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      let value = localStorage.getItem(key);
-      arr.push({ key, value });
+      if (localStorage.key(i) !== "TaskData") {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        arr.push({ key, value });
+      }
     }
-    setLocalStorageArray(arr);
+    setNoteStore(arr);
   }, []);
 
-  useEffect(() => {
-    getAllNote();
-  }, [getAllNote]);
-
+  //watching  getAllNote changes in order to re-render
+  useEffect(() => getAllNote(), [getAllNote]);
+  ReturnStore(NoteStore);
   return (
     <Suspense fallback={<> loading ...</>}>
       {" "}
-      <div className=' flex  mt-5 justify-start  w-full '>
+      <div className=' flex ml-[-11rem] mt-5 justify-start  w-full z-30 '>
         {/* icons */}
 
         <FaBars
@@ -80,14 +82,14 @@ const NoteEditor = () => {
           className={`IconHover hover:cursor-pointer title='more'
  ${
    ShowMenu ? "hidden transition-all  duration-1000 ease-in " : ""
- } absolute  left-4`}
+ } absolute top-7`}
         />
 
         <div
           className={`Titlebar p-[1rem] w-[5rem] h-[40vw] border-slate-400 border-2 rounded items-center my-4  flex flex-col  justify-between relative left-[-12.5rem] ${
             ShowMenu
               ? "translate-x-[12.5rem] transition-transform duration-700 "
-              : "translate-x-[-12.5rem] ease-in  transition-transform duration-700"
+              : "translate-x-[-5.5rem] ease-in  transition-transform duration-700"
           } `}>
           <div className='flex '>
             <FaTimes
@@ -152,10 +154,10 @@ const NoteEditor = () => {
           start typing
         </textarea>
 
-        <NoteList Store={LocalStorageArray} EditNoteProp={EditNote} />
+        <NoteList Store={NoteStore} EditNoteProp={EditNote} />
       </div>
     </Suspense>
   );
 };
 
-export default React.memo(NoteEditor);
+export default NoteEditor;

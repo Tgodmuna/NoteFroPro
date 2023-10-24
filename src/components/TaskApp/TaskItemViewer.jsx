@@ -1,17 +1,16 @@
 import React, { useState, memo } from "react";
 import jsPDF from "jspdf";
 import { FaDownload, FaTimes } from "react-icons/fa";
+const TaskItemViewer = ({ closeHandler, selectedItemProp }) => {
+  const [Selected] = useState(selectedItemProp);
 
-const TodoItemViewer = ({ closeHandler, selectedItemProp }) => {
-  const [Selected, setSelected] = useState(selectedItemProp);
-
-  console.log('selectedItem from todoStore ',selectedItemProp);
-  // functions that handles downloading of Todo
+  console.log("selectedItem from TaskStore ", selectedItemProp);
+  // functions that handles downloading of Task
   const handleDownload = () => {
     let pdf = new jsPDF();
     pdf.text(Selected, 10, 10);
-    pdf.save(`${prompt("give your TODO a name")}`);
-    setTimeout(() => alert("Todo Downloaded", 1000));
+    pdf.save(`${prompt("give your Task a name")}`);
+    setTimeout(() => alert("Task Downloaded", 1000));
     return;
   };
 
@@ -38,4 +37,4 @@ const TodoItemViewer = ({ closeHandler, selectedItemProp }) => {
   );
 };
 
-export default memo(TodoItemViewer);
+export default memo(TaskItemViewer);

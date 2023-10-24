@@ -1,13 +1,10 @@
 import React, { memo, useMemo } from "react";
 import { FcTodoList, FcApproval, FcFullTrash } from "react-icons/fc";
 
-const TodoList = ({ Todo_store, OpenHandler, handleSelect }) => {
-  const { store, storeSetter } = Todo_store;
+const TaskList = ({ Task_store, OpenHandler, handleSelect }) => {
+  const { store, DeleteTaskData } = Task_store;
 
-  const TodoElement = useMemo(() => {
-    function DeleteItem(itemIDToDel) {
-      storeSetter((prevs) => prevs.filter((item) => item.Id !== itemIDToDel));
-    }
+  const TaskElement = useMemo(() => {
     return store.map((item, index) => {
       return (
         <li className='flex flex-col w-[50vw] m-auto' key={item.name}>
@@ -16,11 +13,15 @@ const TodoList = ({ Todo_store, OpenHandler, handleSelect }) => {
               <FcTodoList className='relative ' size={50} />
               <FcFullTrash
                 size={40}
-                onClick={() => DeleteItem(item.Id)}
+                onClick={() => DeleteTaskData(item.Id)}
                 style={{ cursor: "pointer" }}
+                title='delete Task'
+                className="hover:scale-95" 
               />
 
-              <span className='font-bold w-[5rem]'>{"item-" + index}</span>
+              <span className='font-bold w-[5rem]' title='task ID'>
+                {"Task-" + index}
+              </span>
             </span>
 
             <div className='border-2 border-slate-300 bg-cyan-900 rounded-md p-[1.5rem] m-auto my-[1rem] flex flex-row justify-around items-center w-[45rem] '>
@@ -34,11 +35,14 @@ const TodoList = ({ Todo_store, OpenHandler, handleSelect }) => {
                     handleSelect(item.Id);
                     OpenHandler(!false);
                   }}
-                  className=' font-bold w-[5rem] bg-slate-400  capitalize   p-[8px] text-xs rounded-xl m-auto hover:bg-slate-50 hover:cursor-pointer'>
-                  downlaod PDF
+                  className=' font-bold w-[5rem] bg-slate-400  capitalize   p-[8px] text-xs rounded-xl m-auto hover:bg-slate-50 hover:cursor-pointer'
+                  title='view Task content'>
+                  open task
                 </button>
               </div>
-              <span className='text-xl'>{item.TimeStamp}</span>
+              <span className='text-xl' title='Time task was created'>
+                {item.TimeStamp}
+              </span>
               <span className='flex gap-2 items-center relative left-[2.5rem] font-semibold text-lg '>
                 {item.IsSaved && (
                   <>
@@ -52,13 +56,15 @@ const TodoList = ({ Todo_store, OpenHandler, handleSelect }) => {
         </li>
       );
     });
-  }, [OpenHandler, handleSelect, store, storeSetter]);
+  }, [DeleteTaskData, OpenHandler, handleSelect, store]);
 
   return (
     <>
-      <ul className=' w-[50vw] m-auto bg-black rounded-xl '>{TodoElement}</ul>
+      <ul className=' w-[50vw] m-auto PriColor rounded-xl overflow-scroll h-[45rem] overflow-x-hidden '>
+        {TaskElement}
+      </ul>
     </>
   );
 };
 
-export default memo(TodoList);
+export default memo(TaskList);

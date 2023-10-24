@@ -11,7 +11,6 @@ const NoteList = ({ Store, EditNoteProp }) => {
     setstate(Store);
   }, [Store]);
   const list = state.map((item, index) => {
-  
     return (
       <>
         <li
@@ -56,8 +55,8 @@ const NoteList = ({ Store, EditNoteProp }) => {
 
   return (
     <Suspense fallback={<>loading....................</>}>
-      <div className='w-[25rem] border-[4px] border-cyan-700 rounded-lg h-[40vw] my-4  overflow-y-scroll '>
-        <ul className='flex flex-col h-auto w-full   divide-x-2divide-cyan-300  '>
+      <div className='w-[25rem] border-[4px] bord rounded-lg h-[58rem] my-4  overflow-y-auto   mr-2'>
+        <ul className='flex flex-col h-auto w-full mt-4  '>
           {list}
         </ul>
         {showHover && <LazyView Hovered={Hovered} />}

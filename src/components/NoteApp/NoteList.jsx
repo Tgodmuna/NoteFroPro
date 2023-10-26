@@ -55,8 +55,8 @@ const NoteList = ({ Store, EditNoteProp }) => {
 
   return (
     <Suspense fallback={<>loading....................</>}>
-      <div className='w-[25rem] border-[4px] bord rounded-lg h-[58rem] my-4  overflow-y-auto   mr-2'>
-        <ul className='flex flex-col h-auto w-full mt-4  '>
+      <div className='w-[25rem] border-[4px] bord rounded-lg h-[58rem] my-4  overflow-x-clip overflow-scroll  mr-2'>
+        <ul className='flex PriColor flex-col h-full w-full mt-4   '>
           {list}
         </ul>
         {showHover && <LazyView Hovered={Hovered} />}

@@ -8,4 +8,4 @@ const NoteViewer = ({ Hovered }) => {
   );
 };
 
-export default NoteViewer;
+export default  NoteViewer;

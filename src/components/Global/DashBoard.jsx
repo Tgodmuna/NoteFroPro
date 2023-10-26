@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, memo, useCallback, useEffect, useState } from "react";
 import { PiNotePencilBold } from "react-icons/pi";
 import { BsFillPersonFill, BsListTask } from "react-icons/bs";
 import { IoNotifications } from "react-icons/io5";
@@ -9,6 +9,7 @@ import { VscEdit } from "react-icons/vsc";
 import NoteEditor from "../NoteApp/NoteEditor";
 import TaskApp from "../TaskApp/TaskApp";
 import { FcApproval, FcFullTrash, FcTodoList } from "react-icons/fc";
+import Profile from "./Profile";
 
 const DashBoard = () => {
   const [ShowCreateNote, setShowCreateNote] = useState(false);
@@ -16,11 +17,12 @@ const DashBoard = () => {
   const [DisplayTask, setDisplayTask] = useState(false);
   const [DisplayList, setDisplayList] = useState(false);
   const [Notes, setNotes] = useState([]);
+  const [ShowProfile, setShowProfile] = useState(false);
 
   //Function that returns LocalStorageArray from NOTEEDITOR component.
-  function ReturnStore(store) {
+  const ReturnStore = useCallback((store) => {
     setNotes(store);
-  }
+  }, []);
 
   const NoteList = Notes.map((item, index) => {
     return (
@@ -106,13 +108,28 @@ const DashBoard = () => {
     }
   }
 
+  let TaskLEN;
+  const getTaskLength = () => {
+    const Tasks = localStorage.getItem("TaskData");
+    const parsedTasks = JSON.parse(Tasks);
+    TaskLEN = parsedTasks.length;
+  };
+  getTaskLength();
   return (
-    <div className='flex border-gray-900 my-1 bg-slate-400 border-[3px]'>
+    <div className='flex border-gray-900 my-1 bg-slate-400 border-[3px] gap-48'>
       <Suspense fallback={<>hello</>}>
         {/* sidebar */}
         <div className='sidebar z-50  w-[20rem]   h-[60rem] p-4 m-3  border-orange-400 PriColor '>
           <ul className='flex w-full  flex-col m-auto gap-[5rem] uppercase text-white '>
-            <li className='liStyle flex items-center gap-4  justify-center '>
+            <li
+              className='liStyle flex items-center gap-4  justify-center '
+              onClick={() => {
+                setShowProfile(!ShowProfile);
+                setDisplayList(false);
+                setDisplayTask(false);
+                setViewNotes(false);
+                setShowCreateNote(false);
+              }}>
               <span>
                 <BsFillPersonFill size={35} />
               </span>
@@ -142,15 +159,21 @@ const DashBoard = () => {
                 <li
                   className='hover:bg-slate-500 p-4'
                   onClick={() => {
-                    setShowCreateNote(!ShowCreateNote);
-                    setViewNotes(false);
+                    setShowProfile(!true);
+                    setDisplayList(false);
                     setDisplayTask(false);
+                    setViewNotes(false);
+                    setShowCreateNote(!ShowCreateNote);
                   }}>
                   {ShowCreateNote ? "Close editor" : "Create New Note"}
                 </li>
                 <li
                   className='hover:bg-slate-500 p-4'
                   onClick={() => {
+                    setShowCreateNote(false);
+                    setShowProfile(!true);
+                    setDisplayList(false);
+                    setDisplayTask(false);
                     setViewNotes(!ViewNotes);
                     setShowCreateNote(false);
                   }}>
@@ -175,7 +198,10 @@ const DashBoard = () => {
                 <li
                   onClick={() => {
                     setDisplayTask(!DisplayTask);
+                    setShowProfile(!true);
                     setDisplayList(false);
+                    setDisplayTask(false);
+                    setViewNotes(false);
                     setShowCreateNote(false);
                   }}
                   className='hover:bg-slate-500 p-4 '>
@@ -191,6 +217,7 @@ const DashBoard = () => {
                 </li>
               </ul>
             </li>
+            {/* exports */}
             <li className='liStyle flex items-center gap-4  justify-center  '>
               <span>
                 <BiExport size={35} />
@@ -200,24 +227,24 @@ const DashBoard = () => {
           </ul>
         </div>
 
-        {<WelcomeMessage />}
+        <WelcomeMessage TaskLEN={TaskLEN} />
         {ShowCreateNote && <NoteEditor ReturnStore={ReturnStore} />}
         {ViewNotes && (
-          <ul className='flex flex-col h-auto w-[75vw] items-start bg-black'>
-            {NoteList}
-          </ul>
+          <ul className='flex flex-col h-auto w-[75vw] '>{NoteList}</ul>
         )}
         {/* todo */}
         {DisplayTask && <TaskApp />}
         {DisplayList && <ul>{GetAllTask()}</ul>}
+        {ShowProfile && <Profile />}
       </Suspense>
     </div>
   );
 };
-export default DashBoard;
+
+export default React.memo(DashBoard);
 
 //welcome message components
-const WelcomeMessage = (messgage) => {
+const WelcomeMessage = memo(({ TaskLEN }) => {
   useEffect(() => {
     let msgBorder = document.querySelector(".message-border");
     let msg = document.querySelector(".msg");
@@ -239,9 +266,9 @@ const WelcomeMessage = (messgage) => {
       <hr />
       <p className='capitalize text-slate-400 text-xl '>
         {" "}
-        you have 20 notes,20 tasks and 3 tasks completed.
+        you have 20 notes,{TaskLEN} tasks and 3 tasks completed.
       </p>
       <div className='message-border'></div>
     </div>
   );
-};
+});

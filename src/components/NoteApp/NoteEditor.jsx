@@ -8,8 +8,8 @@ import { TbStatusChange } from "react-icons/tb";
 import { BiFontFamily } from "react-icons/bi";
 import { AiOutlineHome } from "react-icons/ai";
 import NoteList from "./NoteList";
-//lazy imports
 
+//lazy imports
 const LazyBG = lazy(() =>
   import("./NoteButtons").then((Module) => ({ default: Module.BGbtn })),
 );
@@ -58,7 +58,10 @@ const NoteEditor = ({ ReturnStore }) => {
     let i;
     let arr = [];
     for (i = 0; i < localStorage.length; i++) {
-      if (localStorage.key(i) !== "TaskData") {
+      if (
+        localStorage.key(i) !== "TaskData" &&
+        localStorage.key(i) !== "AppState"
+      ) {
         let key = localStorage.key(i);
         let value = localStorage.getItem(key);
         arr.push({ key, value });
@@ -70,6 +73,7 @@ const NoteEditor = ({ ReturnStore }) => {
   //watching  getAllNote changes in order to re-render
   useEffect(() => getAllNote(), [getAllNote]);
   ReturnStore(NoteStore);
+
   return (
     <Suspense fallback={<> loading ...</>}>
       {" "}
@@ -99,7 +103,6 @@ const NoteEditor = ({ ReturnStore }) => {
             />
           </div>
 
-          {/* icons */}
           <AiOutlineHome title='Home' size={30} className='IconHover' />
           <HiSaveAs size={30} title='save as' className='IconHover' />
           <HiSave
@@ -150,9 +153,7 @@ const NoteEditor = ({ ReturnStore }) => {
             setText(e.target.value);
             setSaveIndicator(true);
           }}
-          className='Editor w-full h-[40vw] m-3 bg-gray-300 border-2 border-black rounded-lg text-left indent-3 capitalize  my-4 p-4'>
-          start typing
-        </textarea>
+          className='Editor w-full h-[40vw] m-3 bg-gray-300 border-2 border-black rounded-lg text-left indent-3 capitalize  my-4 p-4'></textarea>
 
         <NoteList Store={NoteStore} EditNoteProp={EditNote} />
       </div>
@@ -160,4 +161,4 @@ const NoteEditor = ({ ReturnStore }) => {
   );
 };
 
-export default NoteEditor;
+export default React.memo(NoteEditor);

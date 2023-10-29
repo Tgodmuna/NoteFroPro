@@ -1,17 +1,25 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { Suspense, memo, useCallback, useEffect, useState } from "react";
+import React, {
+  Suspense,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 import { PiNotePencilBold } from "react-icons/pi";
 import { BsFillPersonFill, BsListTask } from "react-icons/bs";
 import { IoNotifications } from "react-icons/io5";
-import { BiChevronDown, BiChevronUp, BiExport } from "react-icons/bi";
+import { BiChevronDown, BiChevronUp, BiExport, BiLogOut } from "react-icons/bi";
 import { CiCircleRemove } from "react-icons/ci";
 import { VscEdit } from "react-icons/vsc";
 import NoteEditor from "../NoteApp/NoteEditor";
 import TaskApp from "../TaskApp/TaskApp";
 import { FcApproval, FcFullTrash, FcTodoList } from "react-icons/fc";
 import Profile from "./Profile";
+import { AppContext } from "../../App";
 
-const DashBoard = () => {
+const DashBoard = ({ Logout }) => {
   const [ShowCreateNote, setShowCreateNote] = useState(false);
   const [ViewNotes, setViewNotes] = useState(false);
   const [DisplayTask, setDisplayTask] = useState(false);
@@ -111,8 +119,10 @@ const DashBoard = () => {
   let TaskLEN;
   const getTaskLength = () => {
     const Tasks = localStorage.getItem("TaskData");
-    const parsedTasks = JSON.parse(Tasks);
-    TaskLEN = parsedTasks.length;
+    if (Tasks) {
+      const parsedTasks = JSON.parse(Tasks);
+      TaskLEN = parsedTasks.length;
+    }
   };
   getTaskLength();
   return (
@@ -121,6 +131,7 @@ const DashBoard = () => {
         {/* sidebar */}
         <div className='sidebar z-50  w-[20rem]   h-[60rem] p-4 m-3  border-orange-400 PriColor '>
           <ul className='flex w-full  flex-col m-auto gap-[5rem] uppercase text-white '>
+            {/* profile */}
             <li
               className='liStyle flex items-center gap-4  justify-center '
               onClick={() => {
@@ -135,6 +146,7 @@ const DashBoard = () => {
               </span>
               Profile
             </li>
+            {/* notification */}
             <li className='liStyle flex items-center gap-4  justify-center  '>
               <span>
                 <span className='h-1 w-1 p-[7px] left-[15rem] top-[10rem] bg-yellow-400 absolute  bottom rounded-full'></span>
@@ -200,7 +212,6 @@ const DashBoard = () => {
                     setDisplayTask(!DisplayTask);
                     setShowProfile(!true);
                     setDisplayList(false);
-                    setDisplayTask(false);
                     setViewNotes(false);
                     setShowCreateNote(false);
                   }}
@@ -211,6 +222,9 @@ const DashBoard = () => {
                   onClick={() => {
                     setDisplayList(!DisplayList);
                     setDisplayTask(false);
+                    setShowProfile(!true);
+                    setShowCreateNote(false);
+                    setViewNotes(false);
                   }}
                   className='hover:bg-slate-500 p-4'>
                   View Task
@@ -223,6 +237,20 @@ const DashBoard = () => {
                 <BiExport size={35} />
               </span>
               Exports
+            </li>
+            {/* sign out */}
+            <li
+              onClick={() => {
+                const qst = window.confirm(
+                  "you will be logged out of your account \n click yes to continue or No to cancel",
+                );
+                if (qst) Logout();
+              }}
+              className='liStyle flex items-center gap-4  justify-center'>
+              <span>
+                <BiLogOut size={35} />
+              </span>
+              log Out
             </li>
           </ul>
         </div>
@@ -251,13 +279,17 @@ const WelcomeMessage = memo(({ TaskLEN }) => {
     msgBorder.addEventListener("animationend", () => msg.remove());
     return () =>
       msgBorder.removeEventListener("animationend", () => msg.remove());
-  }, []);
-
+  }, [TaskLEN]);
+  let AppState = useContext(AppContext);
+  const { fullname } = AppState;
   return (
     <div className='msg PriColor w-[45vw] h-fit border-cyan-300 border flex-col left-[35%] bg-opacity-40  absolute  z-50 '>
       <div className=' flex justify-evenly items-center'>
         <p className='font-serif text-4xl text-sky-400 text uppercase '>
-          welcome back dear USER
+          welcome back dear
+          <span className='uppercase font-semibold italic text-slate-100 font-serif text-4xl ml-2 '>
+            {fullname}
+          </span>
         </p>
         <div className='h-5 w-5 p-[3rem] rounded-full bg-slate-500 flex items-center justify-center '>
           avater
@@ -265,8 +297,9 @@ const WelcomeMessage = memo(({ TaskLEN }) => {
       </div>
       <hr />
       <p className='capitalize text-slate-400 text-xl '>
-        {" "}
-        you have 20 notes,{TaskLEN} tasks and 3 tasks completed.
+        you have <span className='text-slate-100'>20</span> notes,
+        <span className='text-slate-100'>{TaskLEN}</span> tasks and{" "}
+        <span className='text-slate-100 text-xl '>3</span> tasks completed.
       </p>
       <div className='message-border'></div>
     </div>

@@ -20,7 +20,6 @@ const NoteEditor = ({ ReturnStore }) => {
   const [Text, setText] = useState("");
   const [SaveIndicator, setSaveIndicator] = useState(!false);
   const [NoteStore, setNoteStore] = useState([]);
-
   // save handler
   const Save = useCallback(() => {
     const note = Text;
@@ -71,7 +70,9 @@ const NoteEditor = ({ ReturnStore }) => {
   }, []);
 
   //watching  getAllNote changes in order to re-render
-  useEffect(() => getAllNote(), [getAllNote]);
+  useEffect(() => {
+    getAllNote();
+  }, [getAllNote]);
   ReturnStore(NoteStore);
 
   return (
@@ -81,6 +82,7 @@ const NoteEditor = ({ ReturnStore }) => {
         {/* icons */}
 
         <FaBars
+          title='editor tools'
           size={35}
           onClick={() => setShowMenu(true)}
           className={`IconHover hover:cursor-pointer title='more'

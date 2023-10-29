@@ -26,8 +26,9 @@ const Forms = memo(({ get }) => {
     if (state.fullname !== "" && state.username !== "" && state.email !== "") {
       const ParsedData = JSON.parse(localStorage.getItem("AppState"));
       if (
-        ParsedData.username !== state.username &&
-        ParsedData.email !== state.email
+        !ParsedData ||
+        (ParsedData.username !== state.username &&
+          ParsedData.email !== state.email)
       ) {
         get(state);
         alert(
@@ -68,7 +69,7 @@ const Forms = memo(({ get }) => {
       if (inputs[i].value !== "" || null || undefined) {
         label[i].style.visibility = "hidden";
       } else {
-        label[i].style.visibility = "visibility";
+        label[i].style.visibility = "visible";
       }
     }
   }

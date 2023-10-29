@@ -13,13 +13,27 @@ function App() {
   });
   const [IsLoggedIn, setIsLoggedIn] = useState(false);
 
+  //OncomponentMount,if userToken exists, signin the user
+  useEffect(() => {
+    const Token = sessionStorage.getItem("userToken");
+    if (Token) setIsLoggedIn(true);
+  }, [IsLoggedIn]);
+
+  //log out user
+  const logout = () => {
+    sessionStorage.removeItem("userToken");
+    setIsLoggedIn(false);
+  };
+
   //retrieve the form data from Form component.
   //this function was passed as a callback function to form component.
   const GetSignUpData = useCallback((data) => {
     setAppState(data);
   }, []);
 
-  //serialize the Appstate and save in the local storage to persist
+  //serialize the Appstate and save in the local storage
+  // to persist after closing browser or tab
+
   useEffect(() => {
     if (
       AppState.Email !== "" &&
@@ -31,16 +45,31 @@ function App() {
     }
   }, [AppState]);
 
+  //unique token generator for user session management;
+  function UniqueToken(length) {
+    const characters =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let token = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      token += characters.charAt(randomIndex);
+    }
+    return token;
+  }
+
   //retrieve the login data from logIn component.
   //this function was provided to the component using Context API
+  //this function authenticates user sign in
   const Auth = (data) => {
     if (
       data.username === AppState.username &&
       data.password === AppState.password
     ) {
+      const Token = UniqueToken(50);
+      sessionStorage.setItem("userToken", Token);
       setIsLoggedIn(true);
     } else {
-      alert("username or password do not match");
+      alert("userName or password not correct ");
     }
   };
 
@@ -56,7 +85,11 @@ function App() {
   return (
     <AppContext.Provider value={{ ...AppState, Auth }}>
       <div className='App'>
-        {IsLoggedIn ? <DashBoard /> : <Forms get={GetSignUpData} />}
+        {IsLoggedIn ? (
+          <DashBoard Logout={logout} />
+        ) : (
+          <Forms get={GetSignUpData} />
+        )}
       </div>
     </AppContext.Provider>
   );

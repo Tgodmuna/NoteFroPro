@@ -19,14 +19,14 @@ function Profile() {
             User Information
           </h3>
           <hr />
-          <p className='text-gray-400 text-2xl'>
-            <strong>FullName:</strong>
-            <span className='text-xl text-white '>{fullname}</span>
-          </p>
 
           <p className='text-gray-400 text-2xl'>
             <strong>UserName:</strong>{" "}
             <span className='text-xl text-white '>{username}</span>
+          </p>
+          <p className='text-gray-400 text-2xl'>
+            <strong>FullName:</strong>
+            <span className='text-xl text-white '>{fullname}</span>
           </p>
 
           <p className='text-gray-400 text-2xl'>

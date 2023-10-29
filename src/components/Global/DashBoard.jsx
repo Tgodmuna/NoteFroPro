@@ -116,7 +116,7 @@ const DashBoard = ({ Logout }) => {
     }
   }
 
-  let TaskLEN;
+  let TaskLEN, Notelen;
   const getTaskLength = () => {
     const Tasks = localStorage.getItem("TaskData");
     if (Tasks) {
@@ -124,7 +124,25 @@ const DashBoard = ({ Logout }) => {
       TaskLEN = parsedTasks.length;
     }
   };
+  const getNoteLength = () => {
+    let i;
+    let arr = [];
+    for (i = 0; i < localStorage.length; i++) {
+      if (
+        localStorage.key(i) !== "TaskData" &&
+        localStorage.key(i) !== "AppState"
+      ) {
+        let key = localStorage.key(i);
+        let item = localStorage.getItem(key);
+        arr.push({ key, item });
+      }
+    }
+    Notelen = arr;
+  };
+
   getTaskLength();
+  getNoteLength();
+
   return (
     <div className='flex border-gray-900 my-1 bg-slate-400 border-[3px] gap-48'>
       <Suspense fallback={<>hello</>}>
@@ -255,7 +273,7 @@ const DashBoard = ({ Logout }) => {
           </ul>
         </div>
 
-        <WelcomeMessage TaskLEN={TaskLEN} />
+        <WelcomeMessage TaskLEN={TaskLEN} Notelen={Notelen.length} />
         {ShowCreateNote && <NoteEditor ReturnStore={ReturnStore} />}
         {ViewNotes && (
           <ul className='flex flex-col h-auto w-[75vw] '>{NoteList}</ul>
@@ -272,7 +290,7 @@ const DashBoard = ({ Logout }) => {
 export default React.memo(DashBoard);
 
 //welcome message components
-const WelcomeMessage = memo(({ TaskLEN }) => {
+const WelcomeMessage = memo(({ TaskLEN, Notelen }) => {
   useEffect(() => {
     let msgBorder = document.querySelector(".message-border");
     let msg = document.querySelector(".msg");
@@ -297,9 +315,9 @@ const WelcomeMessage = memo(({ TaskLEN }) => {
       </div>
       <hr />
       <p className='capitalize text-slate-400 text-xl '>
-        you have <span className='text-slate-100'>20</span> notes,
+        you have <span className='text-slate-100'>{Notelen}</span> notes,
         <span className='text-slate-100'>{TaskLEN}</span> tasks and{" "}
-        <span className='text-slate-100 text-xl '>3</span> tasks completed.
+        <span className='text-slate-100 text-xl '>0</span> tasks completed.
       </p>
       <div className='message-border'></div>
     </div>

@@ -187,7 +187,6 @@ const Loggin = memo(() => {
   const [login, setlogin] = useState({ username: "", password: "" });
   const AppState = useContext(AppContext);
   const { Auth } = AppState;
-  // console.log("context", AppState);
 
   function hideLabel() {
     const label = document.getElementsByTagName("label");

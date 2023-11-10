@@ -37,8 +37,10 @@ export type lazyImports = {
         closeHandler,
         selectedItemProp,
       }: {
-        closeHandler: any;
-        selectedItemProp: any;
+        closeHandler: (
+          bool: boolean | ((prevState: boolean) => boolean),
+        ) => void;
+        selectedItemProp: string | undefined;
       }) => React.JSX.Element
     >
   >;
@@ -48,7 +50,7 @@ export type lazyImports = {
 export type TaskType = {
   name: string;
   Id: number;
-  value: string|undefined
+  value: string | undefined;
   TimeStamp: string;
   IsSaved: boolean;
   set_status: () => boolean;
@@ -67,4 +69,10 @@ export type listProps = {
   };
   OpenHandler: (bool: boolean | ((prevState: boolean) => boolean)) => void;
   handleSelect: (id: any) => void;
+};
+
+//taskItemViewerPropType
+export type viewerProps = {
+  selectedItemProp?: string | undefined;
+  closeHandler?: (bool: boolean | ((prevState: boolean) => boolean)) => void;
 };

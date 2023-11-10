@@ -1,20 +1,21 @@
 import React, { Suspense, useCallback, useEffect, useState } from "react";
+import { TaskType, lazyImports } from "./TaskTypes";
 //dynamic importations
-const List = React.lazy(() => import("./TaskList"));
+const List: lazyImports['list'] = React.lazy(() => import("./TaskList"));
 const Input = React.lazy(() => import("./TaskInput"));
-const TaskItemViewr = React.lazy(() => import("./TaskItemViewer"));
+const LazyTaskItemViewer: lazyImports['TaskItemviewer'] = React.lazy(() => import("./TaskItemViewer"));
 
 //Task main Components
 const TaskApp = () => {
   const [InputValue, setInputValue] = useState("");
   const [IsOpened, setIsOpened] = useState(false);
-  const [Selected, setSelected] = useState(undefined);
+  const [Selected, setSelected] = useState<string>();
   let [ID, setID] = useState(0);
   //Task Store
-  const [TaskItemStore, setTaskItemStore] = useState([]);
+  const [TaskItemStore, setTaskItemStore] = useState<TaskType>([]);
 
   //call back function to update inputValue state with prop value from Taskinput Component
-  const HandleUpdate = useCallback((value) => {
+  const HandleUpdate = useCallback((value: string) => {
     setInputValue(value);
   }, []);
 
@@ -28,15 +29,15 @@ const TaskApp = () => {
   }, []);
 
   // Function to save the TaskItemStore in local storage
-  const saveTaskData = (data) => {
+  const saveTaskData = (data: TaskType) => {
     localStorage.setItem("TaskData", JSON.stringify(data));
   };
 
-  const DeleteTaskData = (itemToDelete) => {
+  const DeleteTaskData = (itemToDelete: number) => {
     // Retrieve and deserialize data from local storage when you want to delete Task Item
     const StoredData = localStorage.getItem("TaskData");
     if (StoredData) {
-      const deserializeData = JSON.parse(StoredData);
+      const deserializeData: TaskType = JSON.parse(StoredData);
       const deletedItem = deserializeData.filter(
         (item) => item.Id !== itemToDelete,
       );
@@ -47,8 +48,8 @@ const TaskApp = () => {
 
   //Task object functions
   const handleCreateObj = useCallback(
-    (text) => {
-      const uniq = () => Math.random().toFixed(2);
+    (text: string) => {
+      const uniq = () => parseInt(Math.random().toFixed(2));
       let obj = {
         name: `item-${ID}`,
         Id: uniq(),
@@ -66,16 +67,16 @@ const TaskApp = () => {
     [ID, TaskItemStore],
   );
 
-  const memoizedIsOpened = (bool) => {
+  const memoizedIsOpened = (bool: boolean | ((prevState: boolean) => boolean)): void => {
     setIsOpened(bool);
   };
 
   //this function handles selection of item from the list to converts to PDF
-  const HandleSelect = useCallback(
-    (id) => {
+  const HandleSelect: (id: number) => void = useCallback(
+    (id: number) => {
       let store = TaskItemStore;
-      let picked = store.find((item) => item.Id === id);
-      setSelected(picked.value);
+      let picked = store.find((item) => item.Id === id)!
+      if (picked) setSelected(picked.value)
     },
     [TaskItemStore],
   );
@@ -88,6 +89,7 @@ const TaskApp = () => {
         <div className='flex w-[30rem] bg-slate-300 rounded justify-between  my-[2rem] m-auto items-center'>
           <Input HandleUpdateProp={HandleUpdate} />
           <button
+            type="button"
             className=' m-2  border PriColor text-xl text-white hover:scale-75 font-semibold ring-cyan-300 p-3 rounded-md '
             onClick={() => {
               if (InputValue !== "" && InputValue !== undefined) {
@@ -108,7 +110,7 @@ const TaskApp = () => {
 
         {/* itemViewer */}
         {IsOpened && (
-          <TaskItemViewr
+          <LazyTaskItemViewer
             closeHandler={memoizedIsOpened}
             selectedItemProp={Selected}
           />

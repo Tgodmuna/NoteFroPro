@@ -1,7 +1,8 @@
 import React, { memo, useMemo } from "react";
 import { FcTodoList, FcApproval, FcFullTrash } from "react-icons/fc";
+import { listProps } from "./TaskTypes";
 
-const TaskList = ({ Task_store, OpenHandler, handleSelect }) => {
+const TaskList = ({ Task_store, OpenHandler, handleSelect }: listProps) => {
   const { store, DeleteTaskData } = Task_store;
 
   const TaskElement = useMemo(() => {
@@ -16,7 +17,7 @@ const TaskList = ({ Task_store, OpenHandler, handleSelect }) => {
                 onClick={() => DeleteTaskData(item.Id)}
                 style={{ cursor: "pointer" }}
                 title='delete Task'
-                className="hover:scale-95" 
+                className="hover:scale-95"
               />
 
               <span className='font-bold w-[5rem]' title='task ID'>

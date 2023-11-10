@@ -1,16 +1,20 @@
 import React, { useState, memo } from "react";
 import jsPDF from "jspdf";
 import { FaDownload, FaTimes } from "react-icons/fa";
-const TaskItemViewer = ({ closeHandler, selectedItemProp }) => {
+import { viewerProps } from "./TaskTypes";
+const TaskItemViewer = ({ closeHandler, selectedItemProp }: viewerProps) => {
+
   const [Selected] = useState(selectedItemProp);
 
-  console.log("selectedItem from TaskStore ", selectedItemProp);
+
   // functions that handles downloading of Task
   const handleDownload = () => {
     let pdf = new jsPDF();
-    pdf.text(Selected, 10, 10);
-    pdf.save(`${prompt("give your Task a name")}`);
-    setTimeout(() => alert("Task Downloaded", 1000));
+    if (Selected) {
+      pdf.text(Selected, 10, 10);
+      pdf.save(`${prompt("give your Task a name")}`);
+    }
+    setTimeout(() => alert("Task Downloaded"), 1000);
     return;
   };
 
@@ -19,7 +23,9 @@ const TaskItemViewer = ({ closeHandler, selectedItemProp }) => {
       <FaTimes
         className='relative top-[0rem] left-[123rem] hover:cursor-pointer hover:[color:black]'
         size={60}
-        onClick={() => closeHandler(!true)}
+        onClick={() => {
+          if (closeHandler) closeHandler(false)
+        }}
         color='white'
       />
       <div className='single_item    w-[35vw] max-w-[35vw] relative top-[30vh] left-0 right-0 bottom-0  rounded-xl m-auto  text-center text-slate-400 bg-white  p-[1rem] max-h-auto text-3xl  break-words'>
@@ -30,7 +36,7 @@ const TaskItemViewer = ({ closeHandler, selectedItemProp }) => {
           get it Locally{" "}
           <span>
             <FaDownload size='35' width={"40"} className=' m-2 ' />
-          </span>
+          </span>added
         </button>
       </div>
     </div>

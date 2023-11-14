@@ -18,17 +18,22 @@ import TaskApp from "../TaskApp/TaskApp";
 import { FcApproval, FcFullTrash, FcTodoList } from "react-icons/fc";
 import Profile from "./Profile";
 import { AppContext } from "../../App";
+import { localStorageType, notelentype, welcomePropType } from "./globalTypes";
+import { TaskType } from "../TaskApp/TaskTypes";
 
-const DashBoard = ({ Logout }) => {
+type DashBoardPropType = {
+  Logout: () => void
+}
+const DashBoard = ({ Logout }: DashBoardPropType) => {
   const [ShowCreateNote, setShowCreateNote] = useState(false);
   const [ViewNotes, setViewNotes] = useState(false);
   const [DisplayTask, setDisplayTask] = useState(false);
   const [DisplayList, setDisplayList] = useState(false);
-  const [Notes, setNotes] = useState([]);
+  const [Notes, setNotes] = useState<notelentype>([]);
   const [ShowProfile, setShowProfile] = useState(false);
 
   //Function that returns LocalStorageArray from NOTEEDITOR component.
-  const ReturnStore = useCallback((store) => {
+  const ReturnStore = useCallback((store: notelentype) => {
     setNotes(store);
   }, []);
 
@@ -43,26 +48,28 @@ const DashBoard = ({ Logout }) => {
             size={30}
             className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
             onClick={() => {
-              localStorage.removeItem(item.key);
+              if (item.key)
+                localStorage.removeItem(item.key);
               setNotes((prev) => prev.filter((note) => note.key !== item.key));
             }}
           />
           <VscEdit
             title='edit note'
-            onClick={() => {}}
+            onClick={() => { }}
             size={30}
             className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
           />
         </span>
-        <span className='w-full text-xl text-slate-400'>{item.value}</span>
+        <span className='w-full text-xl text-slate-400'>{item.item}</span>
       </li>
     );
   });
 
   function GetAllTask() {
-    const Tasks = JSON.parse(localStorage.getItem("TaskData"));
-    if (Tasks) {
-      return Tasks.map((item, index) => {
+    const Tasks: localStorageType = localStorage.getItem("TaskData")
+    const ParsedTasks: TaskType = Tasks && JSON.parse(Tasks)
+    if (ParsedTasks) {
+      return ParsedTasks.map((item, index) => {
         return (
           <li className='flex flex-col w-[50vw] m-auto' key={item.name}>
             <div className='flex gap-2 bg-slate-300 my-[1rem] m-auto w-[55rem]'>
@@ -116,24 +123,28 @@ const DashBoard = ({ Logout }) => {
     }
   }
 
-  let TaskLEN, Notelen;
+  //this calculates the Task length
+  let TaskLEN: number = 0, Notelen: notelentype = [{ key: null, item: null }];
   const getTaskLength = () => {
-    const Tasks = localStorage.getItem("TaskData");
+    const Tasks: localStorageType = localStorage.getItem("TaskData");
     if (Tasks) {
-      const parsedTasks = JSON.parse(Tasks);
+      const parsedTasks: TaskType = JSON.parse(Tasks);
       TaskLEN = parsedTasks.length;
     }
   };
+
+
+  //this calculates the notes length
   const getNoteLength = () => {
-    let i;
-    let arr = [];
+    let i: number;
+    let arr: notelentype = [];
     for (i = 0; i < localStorage.length; i++) {
       if (
         localStorage.key(i) !== "TaskData" &&
         localStorage.key(i) !== "AppState"
       ) {
-        let key = localStorage.key(i);
-        let item = localStorage.getItem(key);
+        let key: string | null = localStorage.key(i);
+        let item = key && localStorage.getItem(key);
         arr.push({ key, item });
       }
     }
@@ -273,7 +284,7 @@ const DashBoard = ({ Logout }) => {
           </ul>
         </div>
 
-        <WelcomeMessage TaskLEN={TaskLEN} Notelen={Notelen.length} />
+        <WelcomeMessage TaskLEN={TaskLEN} Notelen={Notelen} />
         {ShowCreateNote && <NoteEditor ReturnStore={ReturnStore} />}
         {ViewNotes && (
           <ul className='flex flex-col h-auto w-[75vw] '>{NoteList}</ul>
@@ -290,16 +301,24 @@ const DashBoard = ({ Logout }) => {
 export default React.memo(DashBoard);
 
 //welcome message components
-const WelcomeMessage = memo(({ TaskLEN, Notelen }) => {
+const WelcomeMessage = memo(({ TaskLEN, Notelen }: welcomePropType) => {
   useEffect(() => {
     let msgBorder = document.querySelector(".message-border");
     let msg = document.querySelector(".msg");
-    msgBorder.addEventListener("animationend", () => msg.remove());
-    return () =>
-      msgBorder.removeEventListener("animationend", () => msg.remove());
-  }, [TaskLEN]);
+
+    if (msgBorder) { //if msgborder truly exist, then add event listener on  it
+      msgBorder.addEventListener("animationend", () => msg && msg.remove());
+    }
+    return () => { //if msgborder truly still exist, then remove event listener from it
+      msgBorder && msgBorder.removeEventListener(
+        "animationend",
+        () => msg && msg.remove()
+      );
+    }
+  }, [TaskLEN, Notelen]);
+
   let AppState = useContext(AppContext);
-  const { fullname } = AppState;
+  const { fullname } = AppState || {}
   return (
     <div className='msg PriColor w-[45vw] h-fit border-cyan-300 border flex-col left-[35%] bg-opacity-40  absolute  z-50 '>
       <div className=' flex justify-evenly items-center'>
@@ -315,7 +334,7 @@ const WelcomeMessage = memo(({ TaskLEN, Notelen }) => {
       </div>
       <hr />
       <p className='capitalize text-slate-400 text-xl '>
-        you have <span className='text-slate-100'>{Notelen}</span> notes,
+        you have <span className='text-slate-100'>{Notelen.length}</span> notes,
         <span className='text-slate-100'>{TaskLEN}</span> tasks and{" "}
         <span className='text-slate-100 text-xl '>0</span> tasks completed.
       </p>

@@ -3,8 +3,15 @@ import { AppContext } from "../../App";
 
 function Profile() {
   let AppState = useContext(AppContext);
-  const { email, username, fullname } = AppState;
-  console.log("from profile", AppState);
+
+  if (!AppState) {
+    // Handle the case when context value is undefined
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full border-t-4 border-blue-500 border-opacity-25 h-12 w-12"></div>
+      </div>
+    );  }
+  const { Email, username, fullname } = AppState;
   return (
     <div className='profile-container w-[50vw] m-auto PriColor h-[45vw] shadow-2xl shadow-slate-500 my-3 rounded-lg p-[2rem]'>
       <div className='profile-header text-white p-4'>
@@ -31,7 +38,7 @@ function Profile() {
 
           <p className='text-gray-400 text-2xl'>
             <strong>Email:</strong>
-            <span className='text-xl text-white '>{email}</span>
+            <span className='text-xl text-white '>{Email}</span>
           </p>
           <p></p>
         </div>

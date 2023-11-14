@@ -1,17 +1,20 @@
-import React, { memo, useContext, useState } from "react";
-import { AppContext } from "../../App";
+import React, { ChangeEvent, memo, useContext, useState } from "react";
+import { AppContext, StateType } from "../../App";
 
-const Forms = memo(({ get }) => {
+type getProps = {
+  get: (data: StateType) => void
+}
+const Forms = ({ get }: getProps) => {
   const [state, setstate] = useState({
     fullname: "",
     username: "",
-    email: "",
+    Email: "",
     password: "",
   });
   const [IsActive, setIsActive] = useState(true);
   const [Tab, setTab] = useState(0);
 
-  function handleInput(e) {
+  function handleInput(e: ChangeEvent<HTMLInputElement>) {
     const { value, name } = e.target; //extracts  name and value from the object(element) that calls or invoked this function
     setstate((prevState) => {
       return {
@@ -21,14 +24,13 @@ const Forms = memo(({ get }) => {
     });
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (state.fullname !== "" && state.username !== "" && state.email !== "") {
-      const ParsedData = JSON.parse(localStorage.getItem("AppState"));
+  function handleSubmit() {
+    if (state.fullname !== "" && state.username !== "" && state.Email !== "") {
+      const ParsedData = JSON.parse(localStorage.getItem("AppState") as string);
       if (
         !ParsedData ||
         (ParsedData.username !== state.username &&
-          ParsedData.email !== state.email)
+          ParsedData.Email !== state.Email)
       ) {
         get(state);
         alert(
@@ -39,32 +41,32 @@ const Forms = memo(({ get }) => {
             ...prev,
             fullname: "",
             username: "",
-            email: "",
+            Email: "",
             password: "",
           };
         });
         handleTAB(1, false);
       } else {
-        alert("user with same username and email already exist");
+        alert("user with same username and Email already exist");
         setstate((prev) => {
           return {
             ...prev,
             username: "",
-            email: "",
+            Email: "",
           };
         });
       }
     }
   }
 
-  function handleTAB(value, bool) {
+  function handleTAB(value: number, bool: boolean) {
     setTab(value);
     setIsActive(bool);
   }
 
   function hideLabel() {
-    const label = document.getElementsByTagName("label");
-    const inputs = document.getElementsByTagName("input");
+    const label: HTMLCollectionOf<HTMLLabelElement> = document.getElementsByTagName("label");
+    const inputs: HTMLCollectionOf<HTMLInputElement> = document.getElementsByTagName("input");
     for (let i = 0; i < inputs.length; i++) {
       if (inputs[i].value !== "" || null || undefined) {
         label[i].style.visibility = "hidden";
@@ -112,9 +114,9 @@ const Forms = memo(({ get }) => {
           <div className='holder'>
             <input
               className='inputs peer '
-              type='email'
-              value={state.email}
-              name='email'
+              type='Email'
+              value={state.Email}
+              name='Email'
               id='Email'
               onChange={handleInput}
               onBlur={hideLabel}
@@ -160,33 +162,30 @@ const Forms = memo(({ get }) => {
         <button
           onClick={() => handleTAB(1, false)}
           type='button'
-          className={` ${
-            !IsActive && Tab === 1
-              ? " [transform:scaleX(150.4%)] after:content-['✔']  after:text-yellow-500 after:relative after:top-[-1rem] bg-opacity-20 w-[9rem] bg-slate-200  peer"
-              : null
-          }  btn`}>
+          className={` ${!IsActive && Tab === 1
+            ? " [transform:scaleX(150.4%)] after:content-['✔']  after:text-yellow-500 after:relative after:top-[-1rem] bg-opacity-20 w-[9rem] bg-slate-200  peer"
+            : null
+            }  btn`}>
           log in
         </button>
         <button
           onClick={() => handleTAB(0, true)}
           type='button'
-          className={`btn ${
-            IsActive && Tab === 0
-              ? " [transform:scaleX(150.4%)] after:content-['✔']  after:text-yellow-500 after:relative after:top-[-1rem] bg-opacity-20    bg-black   peer"
-              : null
-          } `}>
+          className={`btn ${IsActive && Tab === 0
+            ? " [transform:scaleX(150.4%)] after:content-['✔']  after:text-yellow-500 after:relative after:top-[-1rem] bg-opacity-20    bg-black   peer"
+            : null
+            } `}>
           Signup
         </button>
       </div>
     </div>
   );
-});
+};
 
 // signIn form
 const Loggin = memo(() => {
   const [login, setlogin] = useState({ username: "", password: "" });
   const AppState = useContext(AppContext);
-  const { Auth } = AppState;
 
   function hideLabel() {
     const label = document.getElementsByTagName("label");
@@ -200,7 +199,7 @@ const Loggin = memo(() => {
     }
   }
 
-  function handleInput(e) {
+  function handleInput(e: ChangeEvent<HTMLInputElement>) {
     const { value, name } = e.target; //extracts  name and value from the object(element) that calls or invoked this function
     setlogin((prevState) => {
       return {
@@ -244,7 +243,7 @@ const Loggin = memo(() => {
       <button
         onClick={(e) => {
           if (login.username !== "" && login.password !== "") {
-            Auth(login);
+            AppState?.Auth(login);
           }
           e.preventDefault();
         }}

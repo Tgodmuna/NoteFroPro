@@ -1,15 +1,16 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { CiCircleRemove } from "react-icons/ci";
 import { VscEdit } from "react-icons/vsc";
+import { notelistpropType } from "../Global/globalTypes";
 const LazyView = React.lazy(() => import("./NoteViewer"));
 
-const NoteList = ({ Store, EditNoteProp }) => {
-  const [state, setstate] = useState(Store);
-  const [Hovered, setHovered] = useState(null);
+const NoteList = ({ store, EditNoteProp }: notelistpropType) => {
+  const [state, setstate] = useState(store);
+  const [Hovered, setHovered] = useState<string | null>(null);
   const [showHover, SetshowHover] = useState(false);
   useEffect(() => {
-    setstate(Store);
-  }, [Store]);
+    setstate(store);
+  }, [store]);
   const list = state.map((item, index) => {
     return (
       <>
@@ -20,7 +21,7 @@ const NoteList = ({ Store, EditNoteProp }) => {
             SetshowHover(false);
           }}
           onMouseEnter={() => {
-            setHovered(item.value);
+            setHovered(item?.item);
             SetshowHover(true);
           }}
           key={index}>
@@ -30,7 +31,7 @@ const NoteList = ({ Store, EditNoteProp }) => {
               size={30}
               className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
               onClick={() => {
-                localStorage.removeItem(item.key);
+                item.key && localStorage.removeItem(item.key);
                 setstate((prev) =>
                   prev.filter((note) => note.key !== item.key),
                 );
@@ -39,14 +40,16 @@ const NoteList = ({ Store, EditNoteProp }) => {
             <VscEdit
               title='edit note'
               onClick={() => {
-                EditNoteProp(item.value);
+                if (item.item) {
+                  EditNoteProp(item.item);
+                }
               }}
               size={30}
               className=' hover:scale-x-75  hover:text-green-500 hidden group-hover:block'
             />
           </span>
           <span className='text-xl hover:text-white overflow-ellipsis overflow-hidden w-auto max-w-[8rem] '>
-            {item.value}
+            {item.item}
           </span>
         </li>
       </>

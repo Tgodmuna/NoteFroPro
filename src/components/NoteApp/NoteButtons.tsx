@@ -1,6 +1,11 @@
 import React from "react";
 
-const BGbtn = ({ closeColorBTNs, ChangeBG }) => {
+type BGbtnPropType = {
+  closeColorBTNs: () => void
+  ChangeBG: (colorName: string) => void
+}
+
+const BGbtn = ({ closeColorBTNs, ChangeBG }: BGbtnPropType) => {
   const colorNames = [
     "red",
     "blue",
@@ -42,10 +47,10 @@ const BGbtn = ({ closeColorBTNs, ChangeBG }) => {
 };
 
 
-const Menu = ({ closeMenu }) => {
+const Menu = () => {
   return (
     <div
-      onMouseLeave={() => closeMenu()}
+      // onMouseLeave={ }
       className=' border-black absolute w-fit  top-[30px] left-[70px] h-auto rounded-lg  z-10 p-4   bg-black bg-opacity-40   shadow-xl shadow-slate-500  '>
       <ul className='w-auto  flex  items-center justify-center divide-x-2 divide-blue-100 flex-wrap '>
         <li className='capitalize font-bold text-lg text-slate-400 hover:bg-slate-100 transition my-2 p-1  hover:rounded  hover:text-black hover:italic '>

@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
-
-const TaskInput = ({ HandleUpdateProp }) => {
+import { InputPropType } from "./TaskTypes";
+const TaskInput = ({ HandleUpdateProp }: InputPropType) => {
   const [TaskText, setTaskText] = useState("");
 
   //handle input function
   const handleInput = useCallback(
-    (e) => {
-      const { value } = e.target;
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value }: { value: string } = e.target;
       setTaskText(value);
       //call back from TaskApp
       HandleUpdateProp(value);

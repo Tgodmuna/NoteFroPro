@@ -2,11 +2,20 @@ import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import DashBoard from "./components/Global/DashBoard";
 import { Forms } from "./components/Global/Forms";
-export const AppContext = React.createContext();
+import { AppContextType } from "./components/Global/globalTypes";
+export const AppContext = React.createContext<AppContextType | undefined>(undefined);
+
+//app state types
+export type StateType = {
+  fullname: string;
+  username: string;
+  Email: string;
+  password: string | number;
+};
 
 function App() {
-  const [AppState, setAppState] = useState({
-    Fname: "",
+  const [AppState, setAppState] = useState<StateType>({
+    fullname: "",
     username: "",
     Email: "",
     password: "",
@@ -27,17 +36,16 @@ function App() {
 
   //retrieve the form data from Form component.
   //this function was passed as a callback function to form component.
-  const GetSignUpData = useCallback((data) => {
+  const GetSignUpData = useCallback((data: StateType) => {
     setAppState(data);
   }, []);
 
   //serialize the Appstate and save in the local storage
   // to persist after closing browser or tab
-
   useEffect(() => {
     if (
       AppState.Email !== "" &&
-      AppState.Fname !== "" &&
+      AppState.fullname !== "" &&
       AppState.username !== "" &&
       AppState.password !== ""
     ) {
@@ -46,7 +54,7 @@ function App() {
   }, [AppState]);
 
   //unique token generator for user session management;
-  function UniqueToken(length) {
+  function UniqueToken(length: number) {
     const characters =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let token = "";
@@ -60,7 +68,7 @@ function App() {
   //retrieve the login data from logIn component.
   //this function was provided to the component using Context API
   //this function authenticates user sign in
-  const Auth = (data) => {
+  const Auth = (data: Omit<StateType, 'Email' | 'fullname'>) => {
     if (
       data.username === AppState.username &&
       data.password === AppState.password
